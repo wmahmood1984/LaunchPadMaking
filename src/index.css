@@ -1,0 +1,183 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,500;0,600;0,700;0,900;1,500&display=swap");
+
+
+* {
+  /* background-color: #000; */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+.dashboard,
+.createPool{
+  color: #f5f5f5 !important;
+  /* height: 100vh; */
+}
+
+.iconsDelEdi{
+  right: 1rem;
+  top: 0.5rem;
+}
+
+.teamname{
+  font-size: 15px;
+}
+
+.edit,
+.delete{
+  cursor: pointer;
+
+}
+
+
+a {
+  text-decoration: none !important;
+}
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+  font-size: 0۔5rem !important;
+  color: white !important;
+  background-color: gray !important;
+  border-color: none !important;
+}
+
+.nav-link {
+  color: #37ec00 !important;
+}
+
+.nav-tabs {
+  font-size: 0.5rem !important;
+  color: white !important;
+  border-radius: 5px !important;
+}
+
+.nav-tabs .nav-link:hover {
+  color: gray;
+}
+
+.badgeLaunch{
+  position: absolute !important;
+  top: -1.5rem !important;
+  right: -0.5rem !important;
+}
+
+.badgeDash{
+  top: 0.5rem;
+  right: 1rem;
+}
+
+.line {
+  width: 15px;
+  height: 80px;
+  border: 2px solid #37ec00;
+  border-top: none;
+  border-bottom: none;
+}
+
+#home {
+  margin-top: 6rem;
+}
+
+@media (min-width: 800px) {
+  .btnFont {
+    font-size: 1.5rem !important;
+  }
+  .logo {
+    width: 300px !important;
+  }
+
+  .bnbLogo {
+    width: 100px;
+  }
+  .nav-tabs .nav-item.show .nav-link,
+  .nav-tabs .nav-link.active {
+    font-size: 1.5rem !important;
+  }
+
+  .nav-tabs {
+    font-size: 1.5rem !important;
+  }
+}
+a {
+  text-decoration: none;
+  background: transparent;
+  color: #000 !important;
+}
+
+@media (min-width: 500px) {
+  .nav-tabs .nav-item.show .nav-link,
+  .nav-tabs .nav-link.active {
+    font-size: 1.3rem !important;
+  }
+
+  .nav-tabs {
+    font-size: 1.3rem !important;
+  }
+  .logoInDetails {
+    width: 200px !important;
+  }
+
+}
+
+@media (max-width: 800px) {
+  .infoDiv h1 {
+    font-size: 1rem !important;
+  }
+  .swapDiv .title {
+    font-size: 1rem !important;
+  }
+  .max {
+    font-size: 1rem !important;
+    padding: 0 0 0 0 !important;
+  }
+  .btnFont {
+    font-size: 1rem !important;
+  }
+
+  .poweredByLogo img {
+    width: 80px;
+  }
+  .badgeLaunch{
+    top: -0.8rem !important;
+  
+  }
+  
+}
+@media (max-width: 500px) {
+  .swapBtn {
+    padding: 1 !important;
+    font-size: 0.8rem !important;
+  }
+
+  .max {
+    font-size: 1rem !important;
+    padding: 0 0 0 0 !important;
+  }
+  .infoDiv h1 {
+    font-size: 0.8rem !important;
+  }
+  
+  .teamImg{
+    width: 5rem;
+  }
+}
+
+.animation {
+  animation-name: animate !important;
+  animation-duration: 1.5s !important;
+  animation-timing-function: ease-in !important;
+  animation-delay: 1s !important;
+}
+
+@keyframes animate {
+  0% {
+    opacity: 0;
+    transform: translateY(-10rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0rem);
+  }
+}

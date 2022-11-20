@@ -1,0 +1,14 @@
+$green: #37ec00;
+$body-bg:  #212529;
+
+$accordion-color: rgb(255, 255, 255);
+$accordion-bg: $body-bg;
+$accordion-border-color: #37ec00;
+$accordion-button-active-bg: #212529;
+$accordion-button-active-color: white;
+$accordion-button-focus-border-color: #37ec00;
+$accordion-border-width: 3px;
+
+$success: $green;
+
+@import '/./node_modules/bootstrap/scss/bootstrap.scss'

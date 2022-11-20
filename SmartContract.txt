@@ -1,0 +1,264 @@
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.0;
+
+
+
+interface IERC20 {
+
+    function totalSupply() external view returns (uint256);
+    function balanceOf(address account) external view returns (uint256);
+    function transfer(address recipient, uint256 amount) external returns (bool);
+    function allowance(address owner, address spender) external view returns (uint256);
+    function approve(address spender, uint256 amount) external returns (bool);
+    function name() external view returns(string memory);
+    function symbol() external view returns(string memory);
+    function decimals() external view  returns (uint8);
+    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+    event Transfer(address indexed from, address indexed to, uint256 value);
+    event Approval(address indexed owner, address indexed spender, uint256 value);
+}
+
+
+
+
+
+
+contract LaundhPadMaking {
+
+    struct ICO {
+        address _address;
+        address[] _token_owner;
+        string _title_symbol;
+        uint256 _noOfTokens;
+        uint256 _price;
+        string _hash;
+        string SocialMedia;
+        uint _max;
+        uint _min;
+        uint[] _vesting;
+        uint _IDOStart;
+        uint _IDOEnd;
+    }
+    
+    
+    address public admin;
+    mapping(address=>bool) public WhitelistMapping;
+    uint256 public ICOIndex;
+    mapping(address=>uint256) public ICOMapping;
+    ICO[] public ICOArray;
+
+
+
+    constructor(){
+        admin = msg.sender; //0xF85ee861F7360E5882FE1efE8DFc29C204d4BfaE;
+    }
+
+    //Modifiers 
+     modifier onlyAdmin {
+      require(msg.sender == admin);
+      _;
+     }
+
+    function addWhiteListSingle(address _user) public onlyAdmin {
+         WhitelistMapping[_user] = true;
+     }
+
+    function removeWhiteListSingle(address _user) public onlyAdmin {
+         WhitelistMapping[_user] = false;
+     }
+
+
+    function addWhiteListBulk(address[] memory _users) public onlyAdmin {
+         for(uint256 i = 0; i < _users.length; i++){
+             WhitelistMapping[_users[i]]=true;
+         }
+     }
+
+    function removeWhiteListBulk(address[] memory _users) public onlyAdmin {
+         for(uint256 i = 0; i < _users.length; i++){
+             WhitelistMapping[_users[i]]=false;
+         }
+     }
+
+
+     function createICO(
+         string memory _title_symbol
+         ,address[] memory _token_owner
+         ,uint256 _noOfTokens
+         ,uint256 _price
+         ,string memory _hash
+         ,string memory SocialMedia
+         ,uint _max
+         ,uint _min
+         ,uint[] memory _vesting
+         ,uint _IDOStart
+         ,uint _IDOEnd
+        
+     ) public onlyAdmin  {
+
+         ICOSale2 tx1 = new ICOSale2(_title_symbol,_token_owner,_noOfTokens,_price,_hash,SocialMedia,_max,_min,_vesting,_IDOStart,_IDOEnd);
+         ICOMapping[address(tx1)]=ICOIndex;
+         ICO memory tx2 = ICO(address(tx1)
+                            ,_token_owner
+                            ,_title_symbol
+                            ,_noOfTokens
+                            ,_price
+                            ,_hash
+                            ,SocialMedia
+                            ,_max
+                            ,_min
+                            ,_vesting
+                            ,_IDOStart
+                            ,_IDOEnd);
+         ICOArray.push(tx2);
+         ICOIndex++;
+        IERC20 _Token = IERC20(_token_owner[0]);
+        _Token.approve(address(tx1),_noOfTokens);
+
+     }
+
+
+     function getPoolDetails() public view returns(ICO[] memory){
+         return ICOArray;
+     }
+
+}
+
+contract ICOSale2 {
+
+    address public admin;
+    address public factory;
+//    IERC20 BUSD = IERC20(0x7ef95a0FEE0Dd31b22626fA2e10Ee6A223F8a684);
+    //Modifiers 
+     modifier onlyAdmin {
+      require(msg.sender == admin);
+      _;
+     }
+
+     mapping(address=>uint256) public userEntitlement;
+     mapping(address=>uint256) public noOfClaims;
+    mapping(address=>uint256) public totalClaimed;
+
+    struct ICO {
+        address _address;
+        string _title_symbol;
+        address[] _token_owner;
+        uint256 _noOfTokens;
+        uint256 _price;
+        string _hash;
+        string SocialMedia;
+        uint _max;
+        uint _min;
+        uint[] _vesting;
+        uint _IDOStart;
+        uint _IDOEnd;
+        uint256 investedTokens;
+        uint256 investedBUSD;
+    }
+
+    ICO public selfInfo;
+
+    constructor(
+        string memory _title_symbol
+        ,address[] memory _token_owner
+        ,uint _noOfTokens
+        ,uint256 _price
+        ,string memory _hash
+        ,string memory _socialMedia
+        ,uint _max
+        ,uint _min
+        ,uint[] memory _vesting
+        ,uint _IDOStart
+        ,uint _IDOEnd
+        ){
+        selfInfo._address = address(this);
+        IERC20 Token = IERC20(_token_owner[0]);
+        selfInfo._title_symbol = string(abi.encodePacked(_title_symbol,"/",Token.symbol()));
+        selfInfo._token_owner = _token_owner;
+        selfInfo._price = _price;
+        selfInfo._hash = _hash;
+        selfInfo._noOfTokens = _noOfTokens;
+        selfInfo.SocialMedia = _socialMedia;
+        selfInfo._max = _max;
+        selfInfo._min = _min;
+        selfInfo._vesting = _vesting;
+        selfInfo._IDOStart = _IDOStart;
+        selfInfo._IDOEnd = _IDOEnd;
+        admin = _token_owner[2];
+        factory = msg.sender;
+   
+    }
+
+
+    function editPool (
+        string memory _title_symbol
+        ,address[] memory _token_owner
+        ,uint _noOfTokens
+        ,uint256 _price
+        ,string memory _hash
+        ,string memory _socialMedia
+        ,uint _max
+        ,uint _min
+        ,uint[] memory _vesting
+        ,uint _IDOStart
+        ,uint _IDOEnd
+        ) public onlyAdmin {
+        selfInfo._address = address(this);
+        IERC20 Token = IERC20(_token_owner[0]);
+        selfInfo._title_symbol = string(abi.encodePacked(_title_symbol,"/",Token.symbol()));
+        selfInfo._token_owner = _token_owner;
+        selfInfo._price = _price;
+        selfInfo._hash = _hash;
+        selfInfo._noOfTokens = _noOfTokens;
+        selfInfo.SocialMedia = _socialMedia;
+        selfInfo._max = _max;
+        selfInfo._min = _min;
+        selfInfo._vesting = _vesting;
+        selfInfo._IDOStart = _IDOStart;
+        selfInfo._IDOEnd = _IDOEnd;
+
+
+   
+    }
+
+
+    function claim() public {
+        require(noOfClaims[msg.sender]<=selfInfo._vesting[1],"You have already claimed");
+        uint256 claimsNo = noOfClaims[msg.sender];
+        require(selfInfo._vesting[0]+(60*60*(claimsNo+1))<=block.timestamp,"you need to wait");
+        uint256 noOfTokens = userEntitlement[msg.sender] / selfInfo._vesting[1];
+        require(noOfTokens<=(userEntitlement[msg.sender]-totalClaimed[msg.sender]),"You have already claimed more tokens");
+        IERC20 Token = IERC20(selfInfo._token_owner[0]);
+        noOfClaims[msg.sender]++;
+        totalClaimed[msg.sender]+=noOfTokens;
+        Token.transferFrom(selfInfo._token_owner[1],msg.sender,noOfTokens);
+    }
+
+
+
+    function Buy(uint _busd) public{
+        LaundhPadMaking _factory = LaundhPadMaking(factory);
+        (bool wl) = _factory.WhitelistMapping(msg.sender);
+        require(wl==true,"you are not allowed to buy");
+        IERC20 BUSD = IERC20(selfInfo._token_owner[3]);
+        uint256 tokens = _busd / selfInfo._price * (10 ** 18);
+        BUSD.transferFrom(msg.sender,selfInfo._token_owner[1],_busd);       
+        userEntitlement[msg.sender]+=tokens;
+        selfInfo.investedTokens+=tokens;
+        selfInfo.investedBUSD+=_busd;
+    }
+
+    function getDetails() public view returns(ICO memory, address[]memory, uint[]memory) {
+        return (selfInfo,selfInfo._token_owner,selfInfo._vesting);
+    }
+
+    function checkWhiteList (address _user) public view returns(bool){
+        LaundhPadMaking _factory = LaundhPadMaking(factory);
+        (bool wl) = _factory.WhitelistMapping(_user);
+        return wl;
+    }
+
+
+
+}
